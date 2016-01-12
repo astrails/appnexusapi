@@ -1,7 +1,10 @@
 class AppnexusApi::Service
 
+  attr_reader :count
+
   def initialize(connection)
     @connection = connection
+    @count = nil
   end
 
   def name
@@ -41,6 +44,7 @@ class AppnexusApi::Service
       "start_element" => 0
     }.merge(params)
     response = @connection.get(uri_suffix, params).body['response']
+    @count = response["count"]
     if return_response
       response
     elsif response.has_key?(plural_name) || response.has_key?(plural_uri_name)
