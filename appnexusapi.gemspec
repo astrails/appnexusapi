@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'multi_json'
   gem.add_dependency 'pester'
+  gem.add_dependency 'activesupport'
   
   gem.add_development_dependency 'bundler', '>= 1.2.0'
 end
