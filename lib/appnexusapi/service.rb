@@ -58,10 +58,11 @@ class AppnexusApi::Service
     end
   end
 
-  def create(attributes={})
+  def create(attributes = {})
     raise(AppnexusApi::NotImplemented, "Service is read-only.") if @read_only
+    params = path_params(attributes)
     attributes = { name => attributes }
-    response = @connection.post(uri_suffix, attributes).body['response']
+    response = @connection.post(uri_suffix, attributes, params).body['response']
     if response['error_id']
       response.delete('dbg')
       raise AppnexusApi::BadRequest.new(response.inspect)
@@ -69,10 +70,11 @@ class AppnexusApi::Service
     get("id" => response["id"]).first
   end
 
-  def update(id, attributes={})
+  def update(id, attributes = {})
     raise(AppnexusApi::NotImplemented, "Service is read-only.") if @read_only
+    params = path_params(attributes, id: id)
     attributes = { name => attributes }
-    response = @connection.put([uri_suffix, id].join('/'), attributes).body['response']
+    response = @connection.put(uri_suffix, attributes, params).body['response']
     if response['error_id']
       response.delete('dbg')
       raise AppnexusApi::BadRequest.new(response.inspect)
@@ -80,9 +82,17 @@ class AppnexusApi::Service
     get("id" => response["id"]).first
   end
 
-  def delete(id)
+  def delete(id, attributes = {})
     raise(AppnexusApi::NotImplemented, "Service is read-only.") if @read_only
-    @connection.delete([uri_suffix, id].join('/')).body['response']
+    params = path_params(attributes, id: id)
+    @connection.delete(uri_suffix, nil, params).body['response']
   end
 
+  private
+
+  def path_params(attributes, params = {})
+    return params unless self.class.const_defined?(:EXTRA_PATH_ATTRIBUTES)
+
+    params.merge(attributes.slice(*self.class.const_get(:EXTRA_PATH_ATTRIBUTES)))
+  end
 end

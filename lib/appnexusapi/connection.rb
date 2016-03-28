@@ -33,21 +33,20 @@ class AppnexusApi::Connection
     @token = nil
   end
 
-  def get(route, params={}, headers={})
-    params = params.delete_if {|key, value| value.nil? }
-    run_request(:get, @connection.build_url(route, params), nil, headers)
+  def get(route, params = {}, headers = {})
+    run_request(:get, request_url(route, params), nil, headers)
   end
 
-  def post(route, body=nil, headers={})
-    run_request(:post, route, body, headers)
+  def post(route, body = nil, params = {}, headers = {})
+    run_request(:post, request_url(route, params), body, headers)
   end
 
-  def put(route, body=nil, headers={})
-    run_request(:put, route, body, headers)
+  def put(route, body = nil, params = {}, headers = {})
+    run_request(:put, request_url(route, params), body, headers)
   end
 
-  def delete(route, body=nil, headers={})
-    run_request(:delete, route, body, headers)
+  def delete(route, body = nil, params = {}, headers = {})
+    run_request(:delete, request_url(route, prams), body, headers)
   end
 
   def run_request(method, route, body, headers)
@@ -67,5 +66,16 @@ class AppnexusApi::Connection
     ensure
       @retry = false
     end
+  end
+
+  private
+
+  def request_url(route, params = nil)
+
+    return route unless params.present?
+
+    params = params.delete_if {|key, value| value.nil? }
+
+    @connection.build_url(route, params)
   end
 end
