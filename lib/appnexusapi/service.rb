@@ -61,7 +61,7 @@ class AppnexusApi::Service
   def create(attributes = {})
     raise(AppnexusApi::NotImplemented, "Service is read-only.") if @read_only
     params = path_params(attributes)
-    attributes = { name => attributes }
+    attributes = { uri_name => attributes }
     response = @connection.post(uri_suffix, attributes, params).body['response']
     if response['error_id']
       response.delete('dbg')
@@ -73,7 +73,7 @@ class AppnexusApi::Service
   def update(id, attributes = {})
     raise(AppnexusApi::NotImplemented, "Service is read-only.") if @read_only
     params = path_params(attributes, id: id)
-    attributes = { name => attributes }
+    attributes = { uri_name => attributes }
     response = @connection.put(uri_suffix, attributes, params).body['response']
     if response['error_id']
       response.delete('dbg')
