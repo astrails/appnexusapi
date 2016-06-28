@@ -46,7 +46,7 @@ class AppnexusApi::Connection
   end
 
   def delete(route, body = nil, params = {}, headers = {})
-    run_request(:delete, request_url(route, prams), body, headers)
+    run_request(:delete, request_url(route, params), body, headers)
   end
 
   def run_request(method, route, body, headers)
