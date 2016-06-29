@@ -10,8 +10,8 @@ class AppnexusApi::Resource
     @json = resource.raw_json
   end
 
-  def delete
-    @service.delete(id)
+  def delete(attributes = @json)
+    @service.delete(id, attributes)
   end
 
   def raw_json

@@ -90,9 +90,14 @@ class AppnexusApi::Service
 
   private
 
-  def path_params(attributes, params = {})
-    return params unless self.class.const_defined?(:EXTRA_PATH_ATTRIBUTES)
+  def extra_path_attributes(attributes)
+    return {} unless self.class.const_defined?(:EXTRA_PATH_ATTRIBUTES)
 
-    params.merge(attributes.slice(*self.class.const_get(:EXTRA_PATH_ATTRIBUTES)))
+    keys = [*self.class.const_get(:EXTRA_PATH_ATTRIBUTES)].map(&:to_s)
+    attributes.stringify_keys.slice(*keys)
+  end
+
+  def path_params(attributes, params = {})
+    params.merge(extra_path_attributes(attributes))
   end
 end
